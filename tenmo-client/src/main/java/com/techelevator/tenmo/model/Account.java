@@ -3,9 +3,7 @@ package com.techelevator.tenmo.model;
 import java.math.BigDecimal;
 
 public class Account {
-
     private int user_id;
-
     private long account_id;
     private BigDecimal balance;
 
