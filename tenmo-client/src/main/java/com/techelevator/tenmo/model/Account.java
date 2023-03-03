@@ -1,6 +1,23 @@
 package com.techelevator.tenmo.model;
 
+import lombok.*;
+
 import java.math.BigDecimal;
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class Account {
+    private int accountId;
+    private int userId;
+    private BigDecimal balance;
+}
+
+
+
+
+
+
+/*import java.math.BigDecimal;
 
 public class Account {
     private int user_id;
@@ -47,4 +64,4 @@ public class Account {
                 ", balance=" + balance +
                 '}';
     }
-}
+}*/

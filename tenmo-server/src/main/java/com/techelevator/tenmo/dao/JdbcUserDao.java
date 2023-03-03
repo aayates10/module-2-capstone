@@ -95,6 +95,28 @@ public class JdbcUserDao implements UserDao {
 
         return true;
     }
+    @Override
+    public boolean createAdmin(String username, String password) {
+
+        // create user
+        String sql = "INSERT INTO tenmo_user (username, password_hash, role) VALUES (?, ?, 'ADMIN') RETURNING user_id;";
+        String password_hash = new BCryptPasswordEncoder().encode(password);
+        Integer newUserId;
+        newUserId = jdbcTemplate.queryForObject(sql, Integer.class, username, password_hash);
+
+        if (newUserId == null) return false;
+
+        //probably don't need an account generated (below) for admin functionality
+        // create account
+        sql = "INSERT INTO account (user_id, balance) values(?, ?);";
+        try {
+            jdbcTemplate.update(sql, newUserId, STARTING_BALANCE);
+        } catch (DataAccessException e) {
+            return false;
+        }
+
+        return true;
+    }
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();

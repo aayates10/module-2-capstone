@@ -1,25 +1,28 @@
 package com.techelevator.tenmo.model;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 public class Transfer {
+
     private int transferId;
-    private int typeId;
-    private int statusId;
+    private int transferTypeId;
+    private int transferStatusId;
     private int accountFrom;
     private int accountTo;
     private BigDecimal amount;
 
-    public Transfer(int transferId, int typeId, int statusId, int accountFrom, int accountTo, BigDecimal amount) {
-        this.transferId = transferId;
-        this.typeId = typeId;
-        this.statusId = statusId;
-        this.accountFrom = accountFrom;
-        this.accountTo = accountTo;
-        this.amount = amount;
-    }
+    private int userFrom;
+    private int userTo;
+    private String userFromUsername;
+    private String userToUsername;
 
-    public Transfer() {}
+    private String transferType;
+    private String transferStatus;
+
+
+    public Transfer(){
+    }
 
     public int getTransferId() {
         return transferId;
@@ -29,20 +32,20 @@ public class Transfer {
         this.transferId = transferId;
     }
 
-    public int getTypeId() {
-        return typeId;
+    public int getTransferTypeId() {
+        return transferTypeId;
     }
 
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
+    public void setTransferTypeId(int transferTypeId) {
+        this.transferTypeId = transferTypeId;
     }
 
-    public int getStatusId() {
-        return statusId;
+    public int getTransferStatusId() {
+        return transferStatusId;
     }
 
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
+    public void setTransferStatusId(int transferStatusId) {
+        this.transferStatusId = transferStatusId;
     }
 
     public int getAccountFrom() {
@@ -67,6 +70,98 @@ public class Transfer {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getTransferType() {
+        return transferType;
+    }
+
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
+    }
+
+    public String getTransferStatus() {
+        return transferStatus;
+    }
+
+    public void setTransferStatus(String transferStatus) {
+        this.transferStatus = transferStatus;
+    }
+
+    public int getUserFrom() {
+        return userFrom;
+    }
+
+    public void setUserFrom(int userFrom) {
+        this.userFrom = userFrom;
+    }
+
+    public int getUserTo() {
+        return userTo;
+    }
+
+    public void setUserTo(int userTo) {
+        this.userTo = userTo;
+    }
+
+    public String getUserFromUsername() {
+        return userFromUsername;
+    }
+
+    public void setUserFromUsername(String userFromUsername) {
+        this.userFromUsername = userFromUsername;
+    }
+
+    public String getUserToUsername() {
+        return userToUsername;
+    }
+
+    public void setUserToUsername(String userToUsername) {
+        this.userToUsername = userToUsername;
+    }
+
+    public String displayTransferType(Integer transferTypeId) {
+        if (transferTypeId == 1) {
+            return "Request Money";
+        } else if (transferTypeId == 2) {
+            return "Send Money";
+        }
+        return transferTypeId.toString();
+    }
+
+    public String displayTransferStatus(Integer transferStatusId) {
+        if (transferStatusId == 1) {
+            return "Pending";
+        } else if (transferStatusId == 2) {
+            return "Approved";
+        } else if (transferStatusId == 3) {
+            return "Rejected";
+        } else {
+            return transferStatusId.toString();
+        }
+    }
+
+    public String displayAsCurrency(BigDecimal bigDecimal) {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        return formatter.format(bigDecimal);
+    }
+
+    public String transferDetailsPrintOut() {
+
+        return  "\n-------------------------------------------------------------------------------------------" +
+                "\n Transfer Details: " +
+                "\n-------------------------------------------------------------------------------------------" +
+                "\n Transfer ID:    " + transferId +
+//                "\n From Account:   " + accountFrom +
+//                "\n To Account:     " + accountTo +
+                "\n From User ID:   " + userFrom +
+                "\n To User ID:     " + userTo +
+                "\n From User:      " + userFromUsername +
+                "\n To User:        " + userToUsername +
+                "\n Type:           " + displayTransferType(transferTypeId) +
+                "\n Status:         " + displayTransferStatus(transferStatusId) +
+                "\n Amount:         " + displayAsCurrency(amount) +
+                "\n-------------------------------------------------------------------------------------------";
     }
 
 }
