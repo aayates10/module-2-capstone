@@ -125,11 +125,11 @@ public class App {
 
     private void viewPendingRequests() {
         // TODO Auto-generated method stub
-        Transfer[] pendingTransfersList = transferService.getPendingRequests();
+        Transfer[] pendingTransfersList = transferService.getPendingRequests(currentUser);
         transferService.printTransfers(pendingTransfersList);
         if (pendingTransfersList.length != 0) {
             int userSelection = consoleService.promptForInt("Enter the transfer ID for the transfer you would like to approve or reject (or 0 to cancel): ");
-            transferService.updatePendingTransferStatus(pendingTransfersList, userSelection);
+            transferService.updatePendingTransferStatus(pendingTransfersList, userSelection, currentUser);
         }
     }
 

@@ -33,7 +33,7 @@ public class TransferService {
         Transfer[] transferHistory = null;
         try {
             setUser(user);
-            transferHistory = restTemplate.exchange(BASE_URL + "/user/" + user.getUser().getId(), HttpMethod.GET, makeAuthEntity(), Transfer[].class).getBody();
+            transferHistory = restTemplate.exchange(BASE_URL + "/user/" + user.getUser().getId(), HttpMethod.GET, makeAuthEntity(user), Transfer[].class).getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Transfers cannot be displayed.");
         }
@@ -43,7 +43,7 @@ public class TransferService {
     public Transfer[] seeAllTransfers() {
         Transfer[] transfers = null;
         try {
-            transfers = restTemplate.exchange(BASE_URL + "/all", HttpMethod.GET, makeAuthEntity(), Transfer[].class).getBody();
+            transfers = restTemplate.exchange(BASE_URL + "/all", HttpMethod.GET, makeAuthEntity(user), Transfer[].class).getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Transfers cannot be displayed.");
         }
@@ -54,7 +54,7 @@ public class TransferService {
         Transfer transfer = null;
         int transferId = consoleService.promptForInt("Please enter the transfer ID for the transfer you'd like to view: ");
         try {
-            transfer = restTemplate.exchange(BASE_URL + "/" + transferId, HttpMethod.GET, makeAuthEntity(), Transfer.class).getBody();
+            transfer = restTemplate.exchange(BASE_URL + "/" + transferId, HttpMethod.GET, makeAuthEntity(user), Transfer.class).getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Your transfer could not be found.");
         }
@@ -79,10 +79,10 @@ public class TransferService {
         }
     }
 
-    public Transfer[] getPendingRequests() {
+    public Transfer[] getPendingRequests(AuthenticatedUser user) {
         Transfer[] pendingTransfersList = null;
         try {
-            pendingTransfersList = restTemplate.exchange(BASE_URL + "/user/" + user.getUser().getId() + "/pending", HttpMethod.GET, makeAuthEntity(), Transfer[].class).getBody();
+            pendingTransfersList = restTemplate.exchange(BASE_URL + "/user/" + user.getUser().getId() + "/pending", HttpMethod.GET, makeAuthEntity(user), Transfer[].class).getBody();
         } catch (RestClientResponseException e) {
             e.printStackTrace();
         }
@@ -99,7 +99,7 @@ public class TransferService {
         return transferSuccessReport;
     }
 
-    public void updatePendingTransferStatus(Transfer[] pendingTransfersList, int userSelection) {
+    public void updatePendingTransferStatus(Transfer[] pendingTransfersList, int userSelection, AuthenticatedUser user) {
         accountService.setUser(user);
         Account userAccount = accountService.findAccountByUserId(user.getUser().getId());
         boolean matchFound = false;
@@ -192,7 +192,7 @@ public class TransferService {
 
     //SECURITY METHODS BELOW - do not alter
 
-    public HttpEntity<Void> makeAuthEntity() {
+    public HttpEntity<Void> makeAuthEntity(AuthenticatedUser user) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(user.getToken());
         return new HttpEntity<>(headers);
