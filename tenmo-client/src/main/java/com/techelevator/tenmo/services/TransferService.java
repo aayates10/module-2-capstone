@@ -89,7 +89,7 @@ public class TransferService {
         return pendingTransfersList;
     }
 
-    public String updateTransfer(Transfer transfer, int statusId) {
+    public String updateTransfer(Transfer transfer, int statusId, AuthenticatedUser user) {
         String transferSuccessReport = "";
         try {
             transferSuccessReport = restTemplate.exchange(BASE_URL + "/update/" + statusId, HttpMethod.PUT, makeTransferEntity(transfer, user), String.class).getBody();
@@ -122,7 +122,7 @@ public class TransferService {
                                     "Please enter a number to choose the corresponding option: ");
                     if (userChoice == 1 || userChoice == 2) {
                         int newTransferStatusId = userChoice + 1;
-                        System.out.println(updateTransfer(transfer, newTransferStatusId));
+                        System.out.println(updateTransfer(transfer, newTransferStatusId, user));
                     } else if (userChoice == 0) {
                         System.out.println("You have elected not to update this transfer.");
                         break;
