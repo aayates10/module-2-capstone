@@ -136,7 +136,7 @@ public class App {
     private void sendBucks() {
         // TODO Auto-generated method stub
         userService.listAllUsers(currentUser);
-        transferService.sendBucks();
+        transferService.sendBucks(currentUser);
 
 
     }
@@ -144,7 +144,7 @@ public class App {
     private void requestBucks() {
         // TODO Auto-generated method stub
         userService.listAllUsers(currentUser);
-        transferService.requestBucks();
+        transferService.requestBucks(currentUser);
 
     }
     private void viewTransferByTransferId() {

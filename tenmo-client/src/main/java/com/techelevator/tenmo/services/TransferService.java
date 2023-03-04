@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.User;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -63,7 +64,7 @@ public class TransferService {
     public String createTransfer(Transfer transfer) {
         String transferSuccessReport = "";
         try {
-            transferSuccessReport = restTemplate.exchange(BASE_URL + "/send", HttpMethod.POST, makeTransferEntity(transfer), String.class).getBody();
+            transferSuccessReport = restTemplate.exchange(BASE_URL + "/send", HttpMethod.POST, makeTransferEntity(transfer, user), String.class).getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Transfer failed. Try again.");
         } return transferSuccessReport;
@@ -91,7 +92,7 @@ public class TransferService {
     public String updateTransfer(Transfer transfer, int statusId) {
         String transferSuccessReport = "";
         try {
-            transferSuccessReport = restTemplate.exchange(BASE_URL + "/update/" + statusId, HttpMethod.PUT, makeTransferEntity(transfer), String.class).getBody();
+            transferSuccessReport = restTemplate.exchange(BASE_URL + "/update/" + statusId, HttpMethod.PUT, makeTransferEntity(transfer, user), String.class).getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             transferSuccessReport = "Your transfer could not be updated.";
         }
@@ -139,7 +140,7 @@ public class TransferService {
         }
     }
 
-    public void requestBucks() {
+    public void requestBucks(AuthenticatedUser user) {
         accountService.setUser(user);
         Transfer transfer = new Transfer();
         try {
@@ -156,7 +157,7 @@ public class TransferService {
                 } catch (NumberFormatException e) {
                     System.out.println("There was an error processing the amount");
                 }
-                String transferSuccess = restTemplate.exchange(BASE_URL + "/request", HttpMethod.POST, makeTransferEntity(transfer), String.class).getBody();
+                String transferSuccess = restTemplate.exchange(BASE_URL + "/request", HttpMethod.POST, makeTransferEntity(transfer, user), String.class).getBody();
                 System.out.println(transferSuccess);
             }
         } catch (Exception e) {
@@ -164,7 +165,7 @@ public class TransferService {
         }
     }
 
-    public void sendBucks() {
+    public void sendBucks(AuthenticatedUser user) {
         accountService.setUser(user);
         Transfer transfer = new Transfer();
         try {
@@ -181,7 +182,7 @@ public class TransferService {
                 } catch (NumberFormatException e) {
                     System.out.println("There was an error processing the amount");
                 }
-                String transferSuccess = restTemplate.exchange(BASE_URL + "/send", HttpMethod.POST, makeTransferEntity(transfer), String.class).getBody();
+                String transferSuccess = restTemplate.exchange(BASE_URL + "/send", HttpMethod.POST, makeTransferEntity(transfer, user), String.class).getBody();
                 System.out.println(transferSuccess);
             }
         } catch (Exception e) {
@@ -197,7 +198,7 @@ public class TransferService {
         return new HttpEntity<>(headers);
     }
 
-    public HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
+    public HttpEntity<Transfer> makeTransferEntity(Transfer transfer, AuthenticatedUser user) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(user.getToken());
