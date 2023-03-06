@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @PreAuthorize("isAuthenticated()")
 //"transfer" is added to BASE_API_URL
 @RequestMapping("account")
+@CrossOrigin(origins = "*")
 public class AccountController {
 
     private final AccountDao accountDao;
